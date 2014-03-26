@@ -3,6 +3,7 @@ define(function(require, exports, module) {
     var Modifier        = require('famous/core/Modifier');
     var Transform       = require('famous/core/Transform');
     var View            = require('famous/core/View');
+    var GenericSync     = require('famous/inputs/GenericSync');
 
     var PageView        = require('./PageView');
     var MenuView        = require('./MenuView');
@@ -12,6 +13,7 @@ define(function(require, exports, module) {
 
         _createPageView.call(this);
         _createMenuView.call(this);
+        _handleTouch.call(this);
     }
 
     AppView.prototype = Object.create(View.prototype);
@@ -41,6 +43,21 @@ define(function(require, exports, module) {
         });
 
         this._add(this.menuModifier).add(this.menuView);
+    }
+
+    function _handleTouch() {
+        this.pageViewPos = 0;
+
+        this.sync = new GenericSync(function() {
+            return this.pageViewPos;
+        }.bind(this), {direction: GenericSync.DIRECTION_X});
+
+        this.pageView.pipe(this.sync);
+
+        this.sync.on('update', function(data) {
+            this.pageViewPos = data.p;
+            this.pageModifier.setTransform(Transform.translate(data.p, 0, 0));
+        }.bind(this));
     }
 
     AppView.prototype.toggleMenu = function() {
