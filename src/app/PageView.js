@@ -31,6 +31,8 @@ define(function(require, exports, module) {
             content: '<img width="320" src="../img/body.png"/>'
         });
 
+        this.bodySurface.pipe(this._eventOutput);
+
         this.bodyModifier = new Modifier({
             transform: Transform.translate(0, 44, 0)
         });
