@@ -31,19 +31,11 @@ define(function(require, exports, module) {
         this.pageView = new PageView();
         this.pageView.on('menuToggle', this.toggleMenu.bind(this));
 
-        this.pageModifier = new Modifier();
-
-        this._add(this.pageModifier).add(this.pageView);
         this.menuToggle = false;
     }
 
     function _createMenuView() {
         this.menuView = new MenuView();
-        this.menuModifier = new Modifier({
-            transform: Transform.translate(0, 0, -1)
-        });
-
-        this._add(this.menuModifier).add(this.menuView);
     }
 
     function _handleTouch() {
@@ -57,7 +49,6 @@ define(function(require, exports, module) {
 
         this.sync.on('update', function(data) {
             this.pageViewPos.set(data.p);
-            this.pageModifier.setTransform(Transform.translate(data.p, 0, 0));
         }.bind(this));
     }
 
@@ -71,11 +62,29 @@ define(function(require, exports, module) {
     };
 
     AppView.prototype.slideLeft = function() {
-        this.pageModifier.setTransform(Transform.translate(0, 0, 0), this.options.transition);
+        this.pageViewPos.set(0, this.options.transition);
     };
 
     AppView.prototype.slideRight = function() {
-        this.pageModifier.setTransform(Transform.translate(276, 0, 0), this.options.transition);
+        this.pageViewPos.set(276, this.options.transition);
+    };
+
+    AppView.prototype.render = function() {
+        this.spec = [];
+
+        this.spec.push({
+            // opacity: 0.5,
+            // size: [300, 300],
+            transform: Transform.translate(0, 0, -1),
+            target: this.menuView.render()
+        });
+
+        this.spec.push({
+            transform: Transform.translate(this.pageViewPos.get(), 0, 0),
+            target: this.pageView.render()
+        });
+
+        return this.spec;
     };
 
     module.exports = AppView;
