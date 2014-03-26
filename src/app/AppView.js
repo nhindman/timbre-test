@@ -5,11 +5,13 @@ define(function(require, exports, module) {
     var View            = require('famous/core/View');
 
     var PageView        = require('./PageView');
+    var MenuView        = require('./MenuView');
 
     function AppView() {
         View.apply(this, arguments);
 
         _createPageView.call(this);
+        _createMenuView.call(this);
     }
 
     AppView.prototype = Object.create(View.prototype);
@@ -30,6 +32,15 @@ define(function(require, exports, module) {
 
         this._add(this.pageModifier).add(this.pageView);
         this.menuToggle = false;
+    }
+
+    function _createMenuView() {
+        this.menuView = new MenuView();
+        this.menuModifier = new Modifier({
+            transform: Transform.translate(0, 0, -1)
+        });
+
+        this._add(this.menuModifier).add(this.menuView);
     }
 
     AppView.prototype.toggleMenu = function() {
