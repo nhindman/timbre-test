@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     function PageView() {
         View.apply(this, arguments);
 
+        _createBacking.call(this);
         _createHeaderView.call(this);
         _createBody.call(this);
         _setListeners.call(this);
@@ -16,6 +17,17 @@ define(function(require, exports, module) {
 
     PageView.prototype = Object.create(View.prototype);
     PageView.prototype.constructor = PageView;
+
+    function _createBacking() {
+        var backing = new Surface({
+            properties: {
+                backgroundColor: 'black',
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)'
+            }
+        });
+
+        this._add(backing);
+    }
 
     function _createHeaderView() {
         this.headerView = new HeaderView();
