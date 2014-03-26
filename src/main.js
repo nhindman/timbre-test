@@ -5,8 +5,6 @@ define(function(require, exports, module) {
     // create the main context
     var mainContext = Engine.createContext();
     
-    
     // your app here
-      
 
 });
