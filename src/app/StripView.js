@@ -29,7 +29,11 @@ define(function(require, exports, module) {
             transform: Transform.rotateZ(angle)
         });
 
-        this._add(rotateModifier).add(backSurface);
+        var skewModifier = new Modifier({
+            transform: Transform.skew(0, 0, angle)
+        });
+
+        this._add(rotateModifier).add(skewModifier).add(backSurface);
     }
 
     module.exports = StripView;
