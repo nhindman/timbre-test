@@ -13,7 +13,11 @@ define(function(require, exports, module) {
     StripView.prototype = Object.create(View.prototype);
     StripView.prototype.constructor = StripView;
 
-    StripView.DEFAULT_OPTIONS = {};
+    StripView.DEFAULT_OPTIONS = {
+        angle: 0,
+        width: 0,
+        height: 0
+    };
 
     function _createBacking() {
         var angle = -Math.PI/6;
