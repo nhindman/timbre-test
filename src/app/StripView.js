@@ -20,21 +20,19 @@ define(function(require, exports, module) {
     };
 
     function _createBacking() {
-        var angle = -Math.PI/6;
-
         var backSurface = new Surface({
-            size: [300, 50],
+            size: [this.options.width, this.options.height],
             properties: {
                 backgroundColor: 'black'
             }
         });
 
         var rotateModifier = new Modifier({
-            transform: Transform.rotateZ(angle)
+            transform: Transform.rotateZ(this.options.angle)
         });
 
         var skewModifier = new Modifier({
-            transform: Transform.skew(0, 0, angle)
+            transform: Transform.skew(0, 0, this.options.angle)
         });
 
         this._add(rotateModifier).add(skewModifier).add(backSurface);
