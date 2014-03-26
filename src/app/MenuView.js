@@ -15,16 +15,18 @@ define(function(require, exports, module) {
     MenuView.prototype = Object.create(View.prototype);
     MenuView.prototype.constructor = MenuView;
 
-    MenuView.DEFAULT_OPTIONS = {};
+    MenuView.DEFAULT_OPTIONS = {
+        angle: -0.2,
+        stripWidth: 320,
+        stripHeight: 54
+    };
 
     function _createStripViews() {
-        var options = {
-            angle: -0.2,
-            width: 320,
-            height: 54
-        };
-
-        var stripView = new StripView(options);
+        var stripView = new StripView({
+            angle: this.options.angle,
+            width: this.options.stripWidth,
+            height: this.options.stripHeight
+        });
 
         var stripModifier = new Modifier({
             transform: Transform.translate(0, 200, 0)
