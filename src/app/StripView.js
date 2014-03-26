@@ -8,15 +8,20 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         _createBacking.call(this);
+        _createTitle.call(this);
+        _createIcon.call(this);
     }
 
     StripView.prototype = Object.create(View.prototype);
     StripView.prototype.constructor = StripView;
 
     StripView.DEFAULT_OPTIONS = {
-        angle: 0,
-        width: 0,
-        height: 0
+        angle: null,
+        width: null,
+        height: null,
+        title: null,
+        iconUrl: null,
+        fontSize: 26
     };
 
     function _createBacking() {
@@ -37,6 +42,35 @@ define(function(require, exports, module) {
 
         this._add(rotateModifier).add(skewModifier).add(backSurface);
     }
+
+    function _createTitle() {
+        var titleSurface = new Surface({
+            content: this.options.title,
+            properties: {
+                color: 'white',
+                fontSize: this.options.fontSize + 'px',
+                textTransform: 'uppercase',
+            }
+        });
+
+        var titleModifier = new Modifier({
+            transform: Transform.move(Transform.rotateZ(this.options.angle), [75, -4, 0])
+        });
+
+        this._add(titleModifier).add(titleSurface);
+    };
+
+    function _createIcon() {
+        var iconSurface = new Surface({
+            content: '<img width="32" src="' + this.options.iconUrl + '"/>'
+        });
+
+        var iconModifier = new Modifier({
+            transform: Transform.translate(24, 2, 0)
+        });
+
+        this._add(iconModifier).add(iconSurface);
+    };
 
     module.exports = StripView;
 });
