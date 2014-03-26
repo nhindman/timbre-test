@@ -50,6 +50,10 @@ define(function(require, exports, module) {
         this.pageView.pipe(this.sync);
 
         this.sync.on('update', function(data) {
+            if(this.pageViewPos.get() === 0 && data.p > 0) {
+                this.menuView.animateStrips();
+            }
+
             this.pageViewPos.set(Math.max(0, data.p));
         }.bind(this));
 
@@ -78,6 +82,7 @@ define(function(require, exports, module) {
             this.slideLeft();
         } else {
             this.slideRight();
+            this.menuView.animateStrips();
         }
         this.menuToggle = !this.menuToggle;
     };
