@@ -8,6 +8,7 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         _createHeader.call(this);
+        _setListeners.call(this);
     }
 
     HeaderView.prototype = Object.create(View.prototype);
@@ -51,6 +52,18 @@ define(function(require, exports, module) {
         this._add(this.hamburgerModifier).add(this.hamburgerSurface);
         this._add(this.searchModifier).add(this.searchSurface);
         this._add(this.iconModifier).add(this.iconSurface);
+    }
+
+    function _setListeners() {
+        this.hamburgerSurface.on('touchstart', function() {
+            this.hamburgerModifier.setOpacity(0.5);
+        }.bind(this));
+
+        this.hamburgerSurface.on('touchend', function() {
+            console.log('toggle');
+            this.hamburgerModifier.setOpacity(1);
+            this._eventOutput.emit('menuToggle');
+        }.bind(this));
     }
 
     module.exports = HeaderView;
