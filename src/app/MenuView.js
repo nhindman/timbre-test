@@ -3,6 +3,7 @@ define(function(require, exports, module) {
     var Modifier        = require('famous/core/Modifier');
     var Transform       = require('famous/core/Transform');
     var View            = require('famous/core/View');
+    var Timer           = require('famous/utilities/Timer');
 
     var StripView       = require('./StripView');
 
@@ -20,7 +21,9 @@ define(function(require, exports, module) {
         stripWidth: 320,
         stripHeight: 54,
         topOffset: 37,
-        stripOffset: 58
+        stripOffset: 58,
+        duration: 400,
+        staggerDelay: 35
     };
 
     function _createStripViews() {
@@ -52,6 +55,34 @@ define(function(require, exports, module) {
             this._add(stripModifier).add(stripView);            
         }
     }
+
+    MenuView.prototype.resetStrips = function() {
+        for(var i = 0; i < this.stripModifiers.length; i++) {
+            var initX = -this.options.stripWidth;
+            var initY = this.options.topOffset
+                + this.options.stripOffset*i
+                + this.options.stripWidth*Math.tan(-this.options.angle);
+
+            this.stripModifiers[i].setTransform(Transform.translate(initX, initY, 0));
+        }
+    };
+
+    MenuView.prototype.animateStrips = function() {
+        this.resetStrips();
+
+        for(var i = 0; i < this.stripModifiers.length; i++) {
+            // use Timer.setTimeout instead of window.setTimeout
+            // Time can be found in famous/utilities
+
+            Timer.setTimeout(function(i) {
+                var yOffset = this.options.topOffset + this.options.stripOffset * i;
+
+                this.stripModifiers[i].setTransform(
+                    Transform.translate( 0, yOffset, 0),
+                    { duration: this.options.duration, curve: 'easeOut' });
+            }.bind(this, i), i*this.options.staggerDelay);
+        }
+    };
 
     module.exports = MenuView;
 });
