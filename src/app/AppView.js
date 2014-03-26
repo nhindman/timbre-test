@@ -21,9 +21,11 @@ define(function(require, exports, module) {
     AppView.prototype.constructor = AppView;
 
     AppView.DEFAULT_OPTIONS = {
+        posThreshold: 138,
+        velThreshold: 0.75,
         transition: {
             duration: 300,
-            curve: 'easeOut'
+            curve: 'easeOut'            
         }
     };
 
@@ -48,8 +50,27 @@ define(function(require, exports, module) {
         this.pageView.pipe(this.sync);
 
         this.sync.on('update', function(data) {
-            this.pageViewPos.set(data.p);
+            this.pageViewPos.set(Math.max(0, data.p));
         }.bind(this));
+
+        this.sync.on('end', (function(data) {
+            var velocity = data.v;
+            var position = this.pageViewPos.get();
+
+            if(this.pageViewPos.get() > this.options.posThreshold) {
+                if(velocity < -this.options.velThreshold) {
+                    this.slideLeft();
+                } else {
+                    this.slideRight();
+                }
+            } else {
+                if(velocity > this.options.velThreshold) {
+                    this.slideRight();
+                } else {
+                    this.slideLeft();
+                }
+            }
+        }).bind(this));
     }
 
     AppView.prototype.toggleMenu = function() {
@@ -62,11 +83,15 @@ define(function(require, exports, module) {
     };
 
     AppView.prototype.slideLeft = function() {
-        this.pageViewPos.set(0, this.options.transition);
+        this.pageViewPos.set(0, this.options.transition, function() {
+            this.menuToggle = false;
+        }.bind(this));
     };
 
     AppView.prototype.slideRight = function() {
-        this.pageViewPos.set(276, this.options.transition);
+        this.pageViewPos.set(276, this.options.transition, function() {
+            this.menuToggle = true;
+        }.bind(this));
     };
 
     AppView.prototype.render = function() {
