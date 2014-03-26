@@ -18,7 +18,14 @@ define(function(require, exports, module) {
     MenuView.DEFAULT_OPTIONS = {};
 
     function _createStripViews() {
-        var stripView = new StripView();
+        var options = {
+            angle: -0.2,
+            width: 320,
+            height: 54
+        };
+
+        var stripView = new StripView(options);
+
         var stripModifier = new Modifier({
             transform: Transform.translate(0, 200, 0)
         });
