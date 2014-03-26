@@ -60,7 +60,6 @@ define(function(require, exports, module) {
         }.bind(this));
 
         this.hamburgerSurface.on('touchend', function() {
-            console.log('toggle');
             this.hamburgerModifier.setOpacity(1);
             this._eventOutput.emit('menuToggle');
         }.bind(this));
