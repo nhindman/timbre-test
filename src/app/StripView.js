@@ -16,6 +16,8 @@ define(function(require, exports, module) {
     StripView.DEFAULT_OPTIONS = {};
 
     function _createBacking() {
+        var angle = -Math.PI/6;
+
         var backSurface = new Surface({
             size: [300, 50],
             properties: {
@@ -23,7 +25,11 @@ define(function(require, exports, module) {
             }
         });
 
-        this._add(backSurface);
+        var rotateModifier = new Modifier({
+            transform: Transform.rotateZ(angle)
+        });
+
+        this._add(rotateModifier).add(backSurface);
     }
 
     module.exports = StripView;
