@@ -6,11 +6,13 @@ define(function(require, exports, module) {
     var Timer           = require('famous/utilities/Timer');
 
     var StripView       = require('./StripView');
+    var FeaturedView    = require('./FeaturedView');
 
     function MenuView() {
         View.apply(this, arguments);
 
         _createStripViews.call(this);
+        _createFeaturedView.call(this);
     }
 
     MenuView.prototype = Object.create(View.prototype);
@@ -56,6 +58,17 @@ define(function(require, exports, module) {
         }
     }
 
+    function _createFeaturedView() {
+        var featuredView = new FeaturedView({ angle: this.options.angle });
+
+        this.featuredMod = new Modifier({
+            transform: Transform.translate(0, 280, 0),
+            opacity: 0
+        });
+
+        this._add(this.featuredMod).add(featuredView);
+    }
+
     MenuView.prototype.resetStrips = function() {
         for(var i = 0; i < this.stripModifiers.length; i++) {
             var initX = -this.options.stripWidth;
@@ -65,6 +78,8 @@ define(function(require, exports, module) {
 
             this.stripModifiers[i].setTransform(Transform.translate(initX, initY, 0));
         }
+
+        this.featuredMod.setOpacity(0);
     };
 
     MenuView.prototype.animateStrips = function() {
@@ -82,6 +97,10 @@ define(function(require, exports, module) {
                     { duration: this.options.duration, curve: 'easeOut' });
             }.bind(this, i), i*this.options.staggerDelay);
         }
+
+        Timer.setTimeout((function() {
+            this.featuredMod.setOpacity(1, { duration: this.options.duration, curve: 'easeInOut' });
+        }).bind(this), this.options.duration);
     };
 
     module.exports = MenuView;
