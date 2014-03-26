@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var Transform       = require('famous/core/Transform');
     var View            = require('famous/core/View');
     var GenericSync     = require('famous/inputs/GenericSync');
+    var Transitionable  = require('famous/transitions/Transitionable');
 
     var PageView        = require('./PageView');
     var MenuView        = require('./MenuView');
@@ -46,16 +47,16 @@ define(function(require, exports, module) {
     }
 
     function _handleTouch() {
-        this.pageViewPos = 0;
+        this.pageViewPos = new Transitionable(0);
 
         this.sync = new GenericSync(function() {
-            return this.pageViewPos;
+            return this.pageViewPos.get(0);
         }.bind(this), {direction: GenericSync.DIRECTION_X});
 
         this.pageView.pipe(this.sync);
 
         this.sync.on('update', function(data) {
-            this.pageViewPos = data.p;
+            this.pageViewPos.set(data.p);
             this.pageModifier.setTransform(Transform.translate(data.p, 0, 0));
         }.bind(this));
     }
