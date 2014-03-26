@@ -10,6 +10,7 @@ define(function(require, exports, module) {
         View.apply(this, arguments);
 
         _createHeaderView.call(this);
+        _setListeners.call(this);
     }
 
     PageView.prototype = Object.create(View.prototype);
@@ -18,7 +19,15 @@ define(function(require, exports, module) {
     function _createHeaderView() {
         this.headerView = new HeaderView();
 
+        this.subscribe(this.headerView);
+
         this._add(this.headerView);
+    }
+
+    function _setListeners() {
+        this._eventInput.on('menuToggle', function() {
+            this._eventOutput.emit('menuToggle');
+        }.bind(this));
     }
 
     module.exports = PageView;
